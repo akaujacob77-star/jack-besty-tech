@@ -78,6 +78,18 @@ body {
   color: #38bdf8;
 }
 
+.nav-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #f8fafc;
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+}
+
 /* Hero Section with Light Transparent Blue Overlay */
 .hero {
   text-align: center;
@@ -356,11 +368,125 @@ footer {
   font-size: 0.9rem;
 }
 
-@media (max-width: 768px) {
+.login-section {
+  display: grid;
+  place-items: center;
+  min-height: 65vh;
+  padding: 2rem 0;
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: min(100%, 420px);
+  box-sizing: border-box;
+  padding: 2rem;
+  border: 1px solid rgba(51, 65, 85, 0.7);
+  border-radius: 16px;
+  background: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.login-card h1 {
+  margin: 0;
+}
+
+.login-card p {
+  margin: 0 0 0.5rem;
+  color: #94a3b8;
+}
+
+.login-card label {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.login-card input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #f8fafc;
+  font: inherit;
+}
+
+.login-card input:focus-visible,
+.nav-menu-toggle:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.login-card button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.login-message {
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.login-message.success {
+  border: 1px solid #059669;
+  background: rgba(6, 95, 70, 0.35);
+  color: #a7f3d0;
+}
+
+.login-message.error {
+  border: 1px solid #b91c1c;
+  background: rgba(127, 29, 29, 0.35);
+  color: #fecaca;
+}
+
+@media (max-width: 960px) {
+  .app-container {
+    padding: 12px;
+  }
+
+  .navbar {
+    position: sticky;
+    top: 8px;
+    padding: 0.7rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  .logo-text {
+    font-size: 1.05rem;
+  }
+
+  .nav-menu-toggle {
+    display: inline-flex;
+  }
+
+  .nav-links {
+    display: none;
+    flex-basis: 100%;
+    flex-direction: column;
+    gap: 0;
+    padding-top: 0.5rem;
+  }
+
+  .nav-links.is-open {
+    display: flex;
+  }
+
+  .nav-links li a {
+    display: block;
+    padding: 0.75rem 0.25rem;
+  }
+
   .showcase-content {
     grid-template-columns: 1fr;
   }
+
   .hero h1 {
     font-size: 2.2rem;
+  }
+
+  .hero-btn-group {
+    flex-direction: column;
   }
 }

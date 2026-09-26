@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
   Wrench, 
   ShoppingCart, 
@@ -13,7 +13,9 @@ import {
   Building2,
   Terminal,
   Server,
-  CheckCircle
+  CheckCircle,
+  Menu,
+  X
 } from 'lucide-react';
 
 import logoImg from './assets/logo.jpeg';
@@ -224,6 +226,49 @@ function Portfolio() {
   );
 }
 
+function Login() {
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setMessage(null);
+    const formData = new FormData(event.currentTarget);
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.get('email'), password: formData.get('password') }),
+      });
+      const data = await response.json();
+      setMessage(response.ok
+        ? { type: 'success', text: 'Login successful.' }
+        : { type: 'error', text: data.error || 'Login failed. Check your email and password.' });
+    } catch {
+      setMessage({ type: 'error', text: 'Could not reach the login server. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section className="login-section">
+      <form className="login-card" onSubmit={handleSubmit}>
+        <h1>Login</h1>
+        <p>Enter your account details to log in.</p>
+        {message && <div className={`login-message ${message.type}`} role={message.type === 'error' ? 'alert' : 'status'}>{message.text}</div>}
+        <label htmlFor="login-email">Email</label>
+        <input id="login-email" name="email" type="email" autoComplete="email" required />
+        <label htmlFor="login-password">Password</label>
+        <input id="login-password" name="password" type="password" autoComplete="current-password" required />
+        <button className="cta-btn" type="submit" disabled={loading}>{loading ? 'Logging in…' : 'Login'}</button>
+      </form>
+    </section>
+  );
+}
+
 // Contact Component connected to Formspree
 function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -308,6 +353,13 @@ function Contact() {
 
 // Main App Layout with Default Export
 export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
   return (
     <div className="app-container">
       {/* Navigation Bar with Logo */}
@@ -316,13 +368,24 @@ export default function App() {
           <img src={logoImg} alt="Jack.Besty.Tech Logo" className="nav-logo-img" />
           <span className="logo-text">Jack.Besty.Tech</span>
         </div>
-        <ul className="nav-links">
+        <button
+          className="nav-menu-toggle"
+          type="button"
+          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+          aria-controls="primary-navigation"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+        <ul id="primary-navigation" className={`nav-links${menuOpen ? ' is-open' : ''}`}>
           <li><Link to="/">Home</Link></li>
           <li><Link to="/services">Tech & Repairs</Link></li>
           <li><Link to="/store">Electronics</Link></li>
           <li><Link to="/academy">Academy</Link></li>
           <li><Link to="/portfolio">Portfolio</Link></li>
           <li><Link to="/contact">Contact</Link></li>
+          <li><Link to="/login">Login</Link></li>
         </ul>
       </nav>
 
@@ -334,6 +397,7 @@ export default function App() {
         <Route path="/academy" element={<Academy />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
 
       {/* Footer */}
